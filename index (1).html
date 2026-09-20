@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вся информация</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background: #020202;
+      color: #eaeaea;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Основной фон */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: 
+        linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.78) 55%, rgba(0,0,0,0.92) 100%),
+        url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+      filter: grayscale(100%) contrast(1.3) brightness(0.55);
+      z-index: 0;
+      transform: scale(1.08);
+      animation: bgDrift 40s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgDrift {
+      0% { transform: scale(1.08) translate(0, 0); }
+      100% { transform: scale(1.12) translate(-1.5%, 1%); }
+    }
+
+    .bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 25%, transparent 15%, rgba(0,0,0,0.75) 100%);
+      pointer-events: none;
+    }
+
+    /* Движущийся туман */
+    .fog {
+      position: fixed;
+      inset: -20%;
+      z-index: 1;
+      pointer-events: none;
+      background: 
+        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(255,255,255,0.03) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(255,255,255,0.025) 0%, transparent 55%);
+      animation: fogMove 25s ease-in-out infinite alternate;
+    }
+
+    @keyframes fogMove {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+      100% { transform: translate(3%, -2%) scale(1.05); opacity: 1; }
+    }
+
+    /* Зерно */
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Дождь */
+    .rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .drop {
+      position: absolute;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.5));
+      border-radius: 50%;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-150vh); opacity: 0; }
+      8% { opacity: 0.9; }
+      92% { opacity: 0.25; }
+      100% { transform: translateY(150vh); opacity: 0; }
+    }
+
+    /* Частицы */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255,255,255,0.45);
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(115vh) scale(0); opacity: 0; }
+      12% { opacity: 0.6; }
+      88% { opacity: 0.2; }
+      100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
+    }
+
+    /* Световые блики */
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.12;
+      animation: orbFloat 18s ease-in-out infinite alternate;
+    }
+
+    .glow-orb.one {
+      width: 320px;
+      height: 320px;
+      background: rgba(255,255,255,0.5);
+      top: 10%;
+      left: 15%;
+      animation-duration: 22s;
+    }
+
+    .glow-orb.two {
+      width: 260px;
+      height: 260px;
+      background: rgba(200,200,220,0.4);
+      bottom: 15%;
+      right: 10%;
+      animation-duration: 19s;
+      animation-delay: -5s;
+    }
+
+    @keyframes orbFloat {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, -40px) scale(1.15); }
+    }
+
+    /* Сканлайн */
+    .scanline {
+      position: fixed;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      z-index: 5;
+      pointer-events: none;
+      animation: scan 9s linear infinite;
+      opacity: 0.65;
+    }
+
+    @keyframes scan {
+      0% { top: -5%; }
+      100% { top: 105%; }
+    }
+
+    /* Контейнер */
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 18px 64px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    /* Заголовок */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+      animation: fadeIn 1.1s ease both;
+    }
+
+    .header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.7rem;
+      font-weight: 400;
+      letter-spacing: 1px;
+      line-height: 1.05;
+      margin-bottom: 2px;
+      background: linear-gradient(180deg, #ffffff 10%, #9a9a9a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 22px rgba(255,255,255,0.2));
+      animation: titlePulse 5.5s ease-in-out infinite;
+    }
+
+    @keyframes titlePulse {
+      0%, 100% { filter: drop-shadow(0 0 14px rgba(255,255,255,0.12)); }
+      50% { filter: drop-shadow(0 0 32px rgba(255,255,255,0.3)); }
+    }
+
+    .header p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.36);
+      font-weight: 500;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Кнопки */
+    .links {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 0.93rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: #f2f2f2;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+      cursor: pointer;
+      background: rgba(18, 20, 24, 0.7);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      letter-spacing: 0.3px;
+      opacity: 0;
+      animation: btnIn 0.65s ease forwards;
+    }
+
+    .btn:nth-child(1) { animation-delay: 0.07s; }
+    .btn:nth-child(2) { animation-delay: 0.13s; }
+    .btn:nth-child(3) { animation-delay: 0.19s; }
+    .btn:nth-child(4) { animation-delay: 0.25s; }
+    .btn:nth-child(5) { animation-delay: 0.31s; }
+    .btn:nth-child(6) { animation-delay: 0.37s; }
+    .btn:nth-child(7) { animation-delay: 0.43s; }
+
+    @keyframes btnIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.08) 50%, transparent 80%);
+      transform: translateX(-130%);
+      transition: transform 0.6s ease;
+    }
+
+    .btn:hover::before {
+      transform: translateX(130%);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(36, 39, 46, 0.88);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 28px rgba(255,255,255,0.05);
+    }
+
+    .btn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .btn-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: 0.92;
+    }
+
+    .btn .sub {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.36);
+      margin-top: 1px;
+      letter-spacing: 0;
+    }
+
+    /* Кошельки */
+    .wallets {
+      margin-top: 28px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeIn 0.9s ease 0.55s forwards;
+    }
+
+    .wallet-item {
+      text-align: center;
+    }
+
+    .wallet-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 5px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    .wallet-box {
+      background: rgba(14, 16, 20, 0.78);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 11px;
+      padding: 12px 13px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.74rem;
+      word-break: break-all;
+      color: #c5c5c5;
+      cursor: pointer;
+      transition: all 0.25s;
+      line-height: 1.45;
+    }
+
+    .wallet-box:hover {
+      background: rgba(30, 33, 40, 0.92);
+      border-color: rgba(255,255,255,0.16);
+      color: #fff;
+    }
+
+    .wallet-box.copied {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.28);
+      color: #fff;
+    }
+
+    .copy-hint {
+      font-size: 0.63rem;
+      color: rgba(255,255,255,0.2);
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+
+    .wallet-box.copied + .copy-hint {
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* Футер */
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 1.2px;
+      opacity: 0;
+      animation: fadeIn 0.9s ease 0.7s forwards;
+    }
+
+    @media (max-width: 480px) {
+      .header h1 { font-size: 2.9rem; }
+      .btn { padding: 13px 14px; font-size: 0.89rem; }
+      .wallet-box { font-size: 0.69rem; padding: 11px; }
+      .container { padding: 40px 15px 56px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="fog"></div>
+  <div class="glow-orb one"></div>
+  <div class="glow-orb two"></div>
+  <div class="noise"></div>
+  <div class="rain" id="rain"></div>
+  <div class="particles" id="particles"></div>
+  <div class="scanline"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1>ecl1pseddd??</h1>
+      <p>info</p>
+    </div>
+
+    <div class="links">
+      <a href="https://www.twitch.tv/hizzyx7" target="_blank" class="btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+        </svg>
+        ТВИЧ
+      </a>
+
+      <a href="https://t.me/sadisfasactionmmxcyed" target="_blank" class="btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.37-.49 1.02-.74 3.99-1.74 6.65-2.89 7.99-3.45 3.8-1.6 4.59-1.88 5.1-1.89.11 0 .37.03.53.18.14.12.18.28.2.45-.01.09.01.24 0 .38z"/>
+        </svg>
+        ТЕЛЕГРАММ КАНАЛ
+      </a>
+
+      <a href="https://steamcommunity.com/profiles/76561199401429041/" target="_blank" class="btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.979 0C5.678 0 .511 4.86.022 11.19c.94-1.01 2.3-1.64 3.79-1.64 1.32 0 2.52.5 3.44 1.32l2.64-1.1c-.15-.5-.23-1.03-.23-1.58 0-2.76 2.24-5 5-5s5 2.24 5 5c0 .55-.08 1.08-.23 1.58l2.64 1.1c.92-.82 2.12-1.32 3.44-1.32 1.49 0 2.85.63 3.79 1.64C23.49 4.86 18.32 0 12.021 0h-.042zM8.5 14.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm7 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/>
+        </svg>
+        МОЙ СТИМ
+      </a>
+
+      <a href="https://steamcommunity.com/tradeoffer/new/?partner=1441163313&token=1BGLg69o" target="_blank" class="btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>
+        </svg>
+        ТРЕЙД
+      </a>
+
+      <a href="https://www.faceit.com/ru/players/ecl1psed" target="_blank" class="btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18l7.5 3.75v7.14L12 18.82l-7.5-3.75V7.93L12 4.18zM12 7l-4 2v4l4 2 4-2V9l-4-2z"/>
+        </svg>
+        FACEIT
+      </a>
+
+      <a href="https://www.donationalerts.com/r/hizzyx7" target="_blank" class="btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        ДОНАТ
+      </a>
+
+      <a href="https://cybershoke.net/ru/profile/76561199401429041/config" target="_blank" class="btn">
+        <div>
+          МОЙ КОНФИГ
+          <span class="sub">Прицел, настройки и тд</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="wallets">
+      <div class="wallet-item">
+        <div class="wallet-label">Solana (SOL)</div>
+        <div class="wallet-box" id="sol" onclick="copyAddress('sol', 'FGmGQSzMenanwGAvz36DxwYpRc8FuaXJanzftgdi6Yyq')">
+          FGmGQSzMenanwGAvz36DxwYpRc8FuaXJanzftgdi6Yyq
+        </div>
+        <div class="copy-hint" id="hint-sol">Нажми, чтобы скопировать</div>
+      </div>
+
+      <div class="wallet-item">
+        <div class="wallet-label">Tron (TRX / USDT TRC20)</div>
+        <div class="wallet-box" id="tron" onclick="copyAddress('tron', 'TXVx3SdjxkJhXxzxAT1tAKauwKAk53wy4m')">
+          TXVx3SdjxkJhXxzxAT1tAKauwKAk53wy4m
+        </div>
+        <div class="copy-hint" id="hint-tron">Нажми, чтобы скопировать</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      ecl1pseddd?? · 24/7
+    </div>
+  </div>
+
+  <script>
+    // Дождь
+    const rain = document.getElementById('rain');
+    for (let i = 0; i < 75; i++) {
+      const drop = document.createElement('div');
+      drop.className = 'drop';
+      drop.style.left = Math.random() * 100 + '%';
+      drop.style.height = (Math.random() * 50 + 20) + 'px';
+      drop.style.animationDuration = (Math.random() * 0.95 + 0.4) + 's';
+      drop.style.animationDelay = (Math.random() * 4) + 's';
+      drop.style.opacity = Math.random() * 0.45 + 0.12;
+      rain.appendChild(drop);
+    }
+
+    // Частицы
+    const particles = document.getElementById('particles');
+    for (let i = 0; i < 32; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (Math.random() * 15 + 8) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      const size = Math.random() * 2.4 + 0.8;
+      p.style.width = p.style.height = size + 'px';
+      particles.appendChild(p);
+    }
+
+    function copyAddress(id, address) {
+      navigator.clipboard.writeText(address).then(() => showCopied(id)).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = address;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showCopied(id);
+      });
+    }
+
+    function showCopied(id) {
+      const box = document.getElementById(id);
+      const hint = document.getElementById('hint-' + id);
+      box.classList.add('copied');
+      hint.textContent = 'Скопировано ✓';
+      setTimeout(() => {
+        box.classList.remove('copied');
+        hint.textContent = 'Нажми, чтобы скопировать';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
